@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using RedDog.Search.Model.Internal;
@@ -58,7 +59,8 @@ namespace RedDog.Search.Http
         /// <returns></returns>
         public async Task<IApiResponse> Execute(IApiRequest request)
         {
-            var response = await Execute(request, reader => Task.FromResult(new NullBody()))
+            //Task.FromResult is supported in .NET 4.5. We use TaskEx to get this working in .NET 4.0
+            var response = await Execute(request, reader => TaskEx.FromResult(new NullBody()))
                 .ConfigureAwait(false);
             return response;
         }
@@ -143,8 +145,9 @@ namespace RedDog.Search.Http
         /// <returns></returns>
         private string BuildUrl(IApiRequest request)
         {
+            //WebUtility.UrlEncode is supported .NET Framework 4.5, so we replace it with HttpUtility.UrlEncode to get the project running under .NET 4.0
             string url = request.UriParameters.Count > 0 ?
-                String.Format(request.Uri, request.UriParameters.Select(p => WebUtility.UrlEncode(p) as object).ToArray()) : request.Uri;
+                String.Format(request.Uri, request.UriParameters.Select(p => HttpUtility.UrlEncode(p) as object).ToArray()) : request.Uri;
             List<string> parameters = request.QueryParameters.Select(
                 p => FormatQueryStringParameter(p.Item1, p.Item2)).ToList();
             parameters.Add(FormatQueryStringParameter("api-version", ApiConstants.Version));
@@ -159,7 +162,8 @@ namespace RedDog.Search.Http
         /// <returns></returns>
         private string FormatQueryStringParameter(string key, string value)
         {
-            return String.Format("{0}={1}", Uri.EscapeUriString(key), WebUtility.UrlEncode(value));
+            //WebUtility.UrlEncode is supported .NET Framework 4.5, so we replace it with HttpUtility.UrlEncode to get the project running under .NET 4.0
+            return String.Format("{0}={1}", Uri.EscapeUriString(key), HttpUtility.UrlEncode(value));
         }
         
         ~ApiConnection()
