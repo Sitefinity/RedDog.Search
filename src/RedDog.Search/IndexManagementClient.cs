@@ -23,9 +23,9 @@ namespace RedDog.Search
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Task<IApiResponse<Index>> CreateIndexAsync(Index index)
+        public async Task<IApiResponse<Index>> CreateIndexAsync(Index index)
         {
-            return _connection.Execute<Index>(
+            return await _connection.Execute<Index>(
                 new ApiRequest("indexes", HttpMethod.Post) {Body = index});
         }
 
@@ -34,9 +34,9 @@ namespace RedDog.Search
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Task<IApiResponse<Index>> UpdateIndexAsync(Index index)
+        public async Task<IApiResponse<Index>> UpdateIndexAsync(Index index)
         {
-            return _connection.Execute<Index>(new ApiRequest("indexes/{0}", HttpMethod.Put) {Body = index}
+            return await _connection.Execute<Index>(new ApiRequest("indexes/{0}", HttpMethod.Put) {Body = index}
                 .WithUriParameter(index.Name));
         }
 
@@ -45,9 +45,9 @@ namespace RedDog.Search
         /// </summary>
         /// <param name="indexName"></param>
         /// <returns></returns>
-        public Task<IApiResponse> DeleteIndexAsync(string indexName)
+        public async Task<IApiResponse> DeleteIndexAsync(string indexName)
         {
-            return _connection.Execute(new ApiRequest("indexes/{0}", HttpMethod.Delete)
+            return await _connection.Execute(new ApiRequest("indexes/{0}", HttpMethod.Delete)
                 .WithUriParameter(indexName));
         }
 
@@ -56,9 +56,9 @@ namespace RedDog.Search
         /// </summary>
         /// <param name="indexName"></param>
         /// <returns></returns>
-        public Task<IApiResponse<Index>> GetIndexAsync(string indexName)
+        public async Task<IApiResponse<Index>> GetIndexAsync(string indexName)
         {
-            return _connection.Execute<Index>(new ApiRequest("indexes/{0}", HttpMethod.Get)
+            return await _connection.Execute<Index>(new ApiRequest("indexes/{0}", HttpMethod.Get)
                 .WithUriParameter(indexName));
         }
 
@@ -67,9 +67,9 @@ namespace RedDog.Search
         /// </summary>
         /// <param name="indexName"></param>
         /// <returns></returns>
-        public Task<IApiResponse<IndexStatistics>> GetIndexStatisticsAsync(string indexName)
+        public async Task<IApiResponse<IndexStatistics>> GetIndexStatisticsAsync(string indexName)
         {
-            return _connection.Execute<IndexStatistics>(new ApiRequest("indexes/{0}/stats", HttpMethod.Get)
+            return await _connection.Execute<IndexStatistics>(new ApiRequest("indexes/{0}/stats", HttpMethod.Get)
                 .WithUriParameter(indexName));
         }
 
@@ -77,10 +77,10 @@ namespace RedDog.Search
         /// Get all indexes.
         /// </summary>
         /// <returns></returns>
-        public Task<IApiResponse<IEnumerable<Index>>> GetIndexesAsync()
+        public async Task<IApiResponse<IEnumerable<Index>>> GetIndexesAsync()
         {
             var request = new ApiRequest("indexes", HttpMethod.Get);
-            return _connection.Execute(request, IndexList.GetIndexes);
+            return await _connection.Execute(request, IndexList.GetIndexes);
         }
 
         /// <summary>
@@ -89,9 +89,9 @@ namespace RedDog.Search
         /// <param name="indexName"></param>
         /// <param name="operations"></param>
         /// <returns></returns>
-        public Task<IApiResponse<IEnumerable<IndexOperationResult>>> PopulateAsync(string indexName, params IndexOperation[] operations)
+        public async Task<IApiResponse<IEnumerable<IndexOperationResult>>> PopulateAsync(string indexName, params IndexOperation[] operations)
         {
-            return _connection.Execute(new ApiRequest("indexes/{0}/docs/index", HttpMethod.Post)
+            return await _connection.Execute(new ApiRequest("indexes/{0}/docs/index", HttpMethod.Post)
                 .WithBody(new {value = operations})
                 .WithUriParameter(indexName), IndexOperationList.GetIndexes);
         }

@@ -60,7 +60,7 @@ namespace RedDog.Search.Http
         public async Task<IApiResponse> Execute(IApiRequest request)
         {
             //Task.FromResult is supported in .NET 4.5. We use TaskEx to get this working in .NET 4.0
-            var response = await Execute(request, reader => TaskEx.FromResult(new NullBody()))
+            var response = await Execute(request, async (reader) => await TaskEx.FromResult(new NullBody()))
                 .ConfigureAwait(false);
             return response;
         }

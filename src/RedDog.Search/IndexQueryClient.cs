@@ -24,7 +24,7 @@ namespace RedDog.Search
         /// <param name="indexName"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public Task<IApiResponse<SearchQueryResult>> SearchAsync(string indexName, SearchQuery query)
+        public async Task<IApiResponse<SearchQueryResult>> SearchAsync(string indexName, SearchQuery query)
         {
             var request = new ApiRequest("indexes/{0}/docs", HttpMethod.Get);
             if (!String.IsNullOrEmpty(query.Query))
@@ -54,7 +54,7 @@ namespace RedDog.Search
             if (query.ScoringParameters != null && query.ScoringParameters.Any())            
                 request.AddQueryParameter("scoringParameter", query.ScoringParameters);
 
-            return _connection.Execute<SearchQueryResult>(request
+            return await _connection.Execute<SearchQueryResult>(request
                 .WithUriParameter(indexName));
         }
         
@@ -64,7 +64,7 @@ namespace RedDog.Search
         /// <param name="indexName"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public Task<IApiResponse<SuggestionResult>> SuggestAsync(string indexName, SuggestionQuery query)
+        public async Task<IApiResponse<SuggestionResult>> SuggestAsync(string indexName, SuggestionQuery query)
         {
             var request = new ApiRequest("indexes/{0}/docs/suggest", HttpMethod.Get);
             if (!String.IsNullOrEmpty(query.Search))
@@ -87,7 +87,7 @@ namespace RedDog.Search
                 request.AddQueryParameter("$filter", query.Filter);
 
 
-            return _connection.Execute<SuggestionResult>(request.WithUriParameter(indexName));
+            return await _connection.Execute<SuggestionResult>(request.WithUriParameter(indexName));
         }
 
 
@@ -97,14 +97,14 @@ namespace RedDog.Search
         /// <param name="indexName"></param>
         /// <param name="query"></param>
         /// <returns></returns>
-        public Task<IApiResponse<LookupQueryResult>> LookupAsync(string indexName, LookupQuery query)
+        public async Task<IApiResponse<LookupQueryResult>> LookupAsync(string indexName, LookupQuery query)
         {
             var request = new ApiRequest("indexes/{0}/docs/" + query.Key, HttpMethod.Get);
             
             if (!String.IsNullOrEmpty(query.Select))
                 request.AddQueryParameter("$select", query.Select);
 
-            return _connection.Execute<LookupQueryResult>(request.WithUriParameter(indexName));
+            return await _connection.Execute<LookupQueryResult>(request.WithUriParameter(indexName));
         }
 
         ~IndexQueryClient()
