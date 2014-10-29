@@ -55,7 +55,7 @@ namespace RedDog.Search
                 request.AddQueryParameter("scoringParameter", query.ScoringParameters);
 
             return await _connection.Execute<SearchQueryResult>(request
-                .WithUriParameter(indexName));
+                .WithUriParameter(indexName)).ConfigureAwait(false);
         }
         
         /// <summary>
@@ -87,7 +87,7 @@ namespace RedDog.Search
                 request.AddQueryParameter("$filter", query.Filter);
 
 
-            return await _connection.Execute<SuggestionResult>(request.WithUriParameter(indexName));
+            return await _connection.Execute<SuggestionResult>(request.WithUriParameter(indexName)).ConfigureAwait(false);
         }
 
 

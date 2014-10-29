@@ -21,7 +21,7 @@ namespace RedDog.Search.Http
 
         public async Task<T> ReadAsync<T>()
         {
-            return await _content.ReadAsAsync<T>(new [] { _formatter });
+            return await _content.ReadAsAsync<T>(new[] { _formatter }).ConfigureAwait(false);
         }
     }
 }

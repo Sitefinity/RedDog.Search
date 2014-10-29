@@ -26,7 +26,7 @@ namespace RedDog.Search
         public async Task<IApiResponse<Index>> CreateIndexAsync(Index index)
         {
             return await _connection.Execute<Index>(
-                new ApiRequest("indexes", HttpMethod.Post) {Body = index});
+                new ApiRequest("indexes", HttpMethod.Post) {Body = index}).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace RedDog.Search
         public async Task<IApiResponse<Index>> UpdateIndexAsync(Index index)
         {
             return await _connection.Execute<Index>(new ApiRequest("indexes/{0}", HttpMethod.Put) {Body = index}
-                .WithUriParameter(index.Name));
+                .WithUriParameter(index.Name)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace RedDog.Search
         public async Task<IApiResponse> DeleteIndexAsync(string indexName)
         {
             return await _connection.Execute(new ApiRequest("indexes/{0}", HttpMethod.Delete)
-                .WithUriParameter(indexName));
+                .WithUriParameter(indexName)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace RedDog.Search
         public async Task<IApiResponse<Index>> GetIndexAsync(string indexName)
         {
             return await _connection.Execute<Index>(new ApiRequest("indexes/{0}", HttpMethod.Get)
-                .WithUriParameter(indexName));
+                .WithUriParameter(indexName)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace RedDog.Search
         public async Task<IApiResponse<IndexStatistics>> GetIndexStatisticsAsync(string indexName)
         {
             return await _connection.Execute<IndexStatistics>(new ApiRequest("indexes/{0}/stats", HttpMethod.Get)
-                .WithUriParameter(indexName));
+                .WithUriParameter(indexName)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace RedDog.Search
         public async Task<IApiResponse<IEnumerable<Index>>> GetIndexesAsync()
         {
             var request = new ApiRequest("indexes", HttpMethod.Get);
-            return await _connection.Execute(request, IndexList.GetIndexes);
+            return await _connection.Execute(request, IndexList.GetIndexes).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace RedDog.Search
         {
             return await _connection.Execute(new ApiRequest("indexes/{0}/docs/index", HttpMethod.Post)
                 .WithBody(new {value = operations})
-                .WithUriParameter(indexName), IndexOperationList.GetIndexes);
+                .WithUriParameter(indexName), IndexOperationList.GetIndexes).ConfigureAwait(false);
         }
 
         ~IndexManagementClient()
